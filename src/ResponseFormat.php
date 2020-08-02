@@ -74,6 +74,16 @@ class ResponseFormat implements Jsonable, JsonSerializable, Arrayable, ArrayAcce
     }
 
     /**
+     * Returns if there is any data
+     *
+     * @return boolean
+     */
+    public function hasAny()
+    {
+        return $this->total > 0;
+    }
+
+    /**
      * @param null $perPage
      * @param string $pageName
      * @param null $page

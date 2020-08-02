@@ -12,6 +12,7 @@ use Ysfkaya\IdeasoftApi\Traits\StoreName;
  * @package Ysfkaya\IdeasoftApi
  *
  * @property Service $orders
+ * @property Service $shipments
  * @property Service $products
  * @property Service $product_images
  */
@@ -40,7 +41,7 @@ class Ideasoft
     {
         $this->storeName = $storeName;
 
-        $this->setupDefaultServices();
+        // $this->setupDefaultServices();
     }
 
     /**
@@ -62,7 +63,7 @@ class Ideasoft
      */
     protected function setupDefaultServices()
     {
-        foreach (['orders', 'products', 'product_images', 'order_details'] as $service) {
+        foreach (['orders', 'products', 'product_images', 'order_details', 'shipments'] as $service) {
             $this->setService(
                 new Service($this, $service)
             );
@@ -102,10 +103,12 @@ class Ideasoft
      */
     public function __get($name)
     {
-        if (isset($this->services[$name])) {
-            return $this->getService($name);
+        if (!isset($this->services[$name])) {
+            $this->setService(
+                new Service($this, $name)
+            );
         }
 
-        throw new \InvalidArgumentException;
+        return $this->getService($name);
     }
 }
