@@ -53,6 +53,16 @@ class ResponseFormat implements Jsonable, JsonSerializable, Arrayable, ArrayAcce
         $this->total = (int)$this->response->getHeaderLine('total_count') ?: 0;
     }
 
+    public function getOriginalResponse()
+    {
+        return $this->response;
+    }
+
+    public function getInstanceResponse()
+    {
+        return $this->instance;
+    }
+
     /**
      * Get the collection items
      *

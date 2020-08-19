@@ -43,6 +43,10 @@ class Service
      */
     public $parameters;
 
+    public $async = false;
+
+    public $asyncCallback;
+
     /**
      * Service constructor.
      *
@@ -67,7 +71,7 @@ class Service
                 'Host' => $this->ideasoft->withStoreName('{store}.myideasoft.com'),
                 'Accept' => 'application/json',
                 'Authorization' => 'Bearer ' . $this->ideasoft->token
-            ]
+            ],
         ]);
     }
 
@@ -77,6 +81,14 @@ class Service
     protected function getRequestUrl()
     {
         return $this->ideasoft->withStoreName(self::BASE_URL);
+    }
+
+    public function withAsync(callable $callback = null)
+    {
+        $this->async = true;
+        $this->asyncCallback = $callback;
+
+        return $this;
     }
 
     /**
@@ -90,15 +102,40 @@ class Service
     /**
      * @return ResponseFormat
      */
+    public function delete($id = null)
+    {
+        return $this->getResponse()->delete($id);
+    }
+
+    /**
+     * @return ResponseFormat
+     */
     public function getById($id)
     {
         return $this->getResponse()->getById($id);
     }
 
+    public function create($attributes)
+    {
+        return $this->getResponse()->create($attributes);
+    }
+
+    /**
+     *
+     * @param  $id
+     * @param $attributes
+     *
+     * @return ResponseFormat
+     */
+    public function update($id, $attributes)
+    {
+        return $this->getResponse()->update($id, $attributes);
+    }
+
     /**
      * @return LengthAwarePaginator
      */
-    public function pagination($perPage, $page = null, $pageName = 'page')
+    public function pagination($perPage = 100, $page = null, $pageName = 'page')
     {
         $page = $page ?: Paginator::resolveCurrentPage($pageName);
 
@@ -123,6 +160,12 @@ class Service
      */
     public function getResponse(): Response
     {
-        return (new Response($this->getHttpClient(), $this->parameters, $this->endpoint));
+        return new Response(
+            $this->getHttpClient(),
+            $this->parameters,
+            $this->endpoint,
+            $this->async,
+            $this->asyncCallback
+        );
     }
 }

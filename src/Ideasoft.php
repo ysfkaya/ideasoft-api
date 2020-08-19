@@ -12,6 +12,7 @@ use Ysfkaya\IdeasoftApi\Traits\StoreName;
  * @package Ysfkaya\IdeasoftApi
  *
  * @property Service $orders
+ * @property Service $members
  * @property Service $shipments
  * @property Service $products
  * @property Service $product_images
@@ -40,8 +41,6 @@ class Ideasoft
     public function __construct(string $storeName)
     {
         $this->storeName = $storeName;
-
-        // $this->setupDefaultServices();
     }
 
     /**
@@ -54,20 +53,6 @@ class Ideasoft
         $this->token = $token;
 
         return $this;
-    }
-
-    /**
-     * Setup the default services
-     *
-     * @return void
-     */
-    protected function setupDefaultServices()
-    {
-        foreach (['orders', 'products', 'product_images', 'order_details', 'shipments'] as $service) {
-            $this->setService(
-                new Service($this, $service)
-            );
-        }
     }
 
     /**
