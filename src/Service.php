@@ -155,6 +155,11 @@ class Service
         return $this;
     }
 
+    public function getFullRequestUrl()
+    {
+        return $this->getRequestUrl() . $this->endpoint . '?' . http_build_query($this->parameters->toArray());
+    }
+
     /**
      * @return Response
      */
