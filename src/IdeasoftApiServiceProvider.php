@@ -13,12 +13,17 @@ class IdeasoftApiServiceProvider extends ServiceProvider
      */
     public function register()
     {
+
         $config = $this->app['config']->get('services.ideasoft');
 
         $this->app->singleton('ideasoft.oauth', function ($app) use ($config) {
             return new OAuth(
-                $app['request'], $config['store_name'], $config['client_id'], $config['client_secret'],
-                $config['redirect_uri'], $config['httpOptions']
+                $app['request'],
+                $config['store_name'],
+                $config['client_id'],
+                $config['client_secret'],
+                $config['redirect_uri'],
+                $config['httpOptions']
             );
         });
 
@@ -38,6 +43,5 @@ class IdeasoftApiServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
     }
 }

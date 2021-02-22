@@ -90,7 +90,7 @@ class OAuth
      */
     public function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase($this->withStoreName('http://{store}.myideasoft.com/admin/user/auth'), $state);
+        return $this->buildAuthUrlFromBase($this->withStoreName('admin/user/auth'), $state);
     }
 
     /**
@@ -100,7 +100,7 @@ class OAuth
      */
     public function getTokenUrl()
     {
-        return $this->withStoreName('http://{store}.myideasoft.com/oauth/v2/token');
+        return $this->withStoreName('oauth/v2/token');
     }
 
     /**

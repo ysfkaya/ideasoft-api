@@ -54,7 +54,6 @@ class RequestParameter implements Arrayable, Jsonable
      */
     public $ids;
 
-
     /**
      * @param string $column
      * @param string $term
@@ -114,6 +113,8 @@ class RequestParameter implements Arrayable, Jsonable
     public function ids($ids)
     {
         if (is_array($ids)) {
+            $ids = array_unique($ids);
+
             $ids = implode(',', $ids);
         }
 

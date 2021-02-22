@@ -5,6 +5,7 @@ namespace Ysfkaya\IdeasoftApi;
 use GuzzleHttp\Client;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Str;
 
 /**
  * Class Service
@@ -26,7 +27,7 @@ class Service
     /**
      * @var string
      */
-    const BASE_URL = 'http://{store}.myideasoft.com/api/';
+    const API_ENDPOINT = 'api';
 
     /**
      * @var string
@@ -65,14 +66,18 @@ class Service
      */
     public function getHttpClient()
     {
-        return new Client([
+        $defaultOptions = [
             'base_uri' => $this->getRequestUrl(),
             'headers' => [
-                'Host' => $this->ideasoft->withStoreName('{store}.myideasoft.com'),
+                'Host' => $this->ideasoft->withStoreName(null, false),
                 'Accept' => 'application/json',
                 'Authorization' => 'Bearer ' . $this->ideasoft->token
             ],
-        ]);
+        ];
+
+        $options = array_merge(config('ideasoft.httpOptions', []), $defaultOptions);
+
+        return new Client($options);
     }
 
     /**
@@ -80,15 +85,9 @@ class Service
      */
     protected function getRequestUrl()
     {
-        return $this->ideasoft->withStoreName(self::BASE_URL);
-    }
+        $url = $this->ideasoft->withStoreName(self::API_ENDPOINT);
 
-    public function withAsync(callable $callback = null)
-    {
-        $this->async = true;
-        $this->asyncCallback = $callback;
-
-        return $this;
+        return Str::finish($url, '/');
     }
 
     /**
@@ -135,11 +134,13 @@ class Service
     /**
      * @return LengthAwarePaginator
      */
-    public function pagination($perPage = 100, $page = null, $pageName = 'page')
+    public function pagination($page = null, $perPage = 100, $pageName = 'page')
     {
         $page = $page ?: Paginator::resolveCurrentPage($pageName);
 
-        return $this->page($page)->limit($perPage)->get()->pagination($perPage, $pageName, $page);
+        $response = $this->page($page)->limit($perPage)->get();
+
+        return $response->pagination($perPage, $pageName, $page);
     }
 
     /**

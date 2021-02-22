@@ -2,6 +2,8 @@
 
 namespace Ysfkaya\IdeasoftApi\Traits;
 
+use Illuminate\Support\Str;
+
 trait StoreName
 {
     /**
@@ -18,8 +20,8 @@ trait StoreName
      *
      * @return string|string[]
      */
-    public function withStoreName($arg)
+    public function withStoreName($endpoint = null, $useProtocol = true)
     {
-        return str_replace('{store}', $this->storeName, $arg);
+        return ($useProtocol ? 'https://' : '') . $this->storeName . '.myideasoft.com' . ($endpoint ? Str::start($endpoint, '/') : $endpoint);
     }
 }

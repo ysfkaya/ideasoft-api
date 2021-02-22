@@ -16,6 +16,7 @@ use Ysfkaya\IdeasoftApi\Traits\StoreName;
  * @property Service $shipments
  * @property Service $products
  * @property Service $product_images
+ * @property Service $order_user_notes
  */
 class Ideasoft
 {
